@@ -1,7 +1,7 @@
 package bot
 
-import scala.util.parsing
+//import scala.util.parsing
 
-class CommandParser extends RegexParsers {
-
-}
+//class CommandParser extends RegexParsers {
+//
+//}
