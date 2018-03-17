@@ -1,4 +1,4 @@
-name := "telegram-bot2"
+name := "telegram-bot"
 
 version := "0.1"
 
