@@ -19,7 +19,16 @@ object App {
 
   def createPoll(query : String): Unit = {
     println(query)
-    //_polls = _polls + (1 -> new Poll(name, anonymity))
+    val pattern = """^/create (.+)$""".r
+    val res = pattern.findFirstMatchIn(query).get.groupNames
+    println(res.toString())
+
+
+    var id = 0
+    if (_polls.nonEmpty)
+      id = _polls.maxBy { case (key, value) => key }._1 + 1
+
+    //_polls = _polls + (1 -> new Poll(name, id))
   }
 
   def listPolls(): Unit = {
