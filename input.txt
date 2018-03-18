@@ -1,6 +1,4 @@
-
-test
-/create
-
-test
-ur nice
+/create my_poll
+/list
+hello there!
+/start_poll 123

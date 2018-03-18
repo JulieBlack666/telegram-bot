@@ -1,11 +1,12 @@
 package bot
 
+import scala.collection.immutable
 import scala.io.Source
 
 
 object App {
 
-  private val _polls: scala.collection.immutable.Map[Int, Poll] = _
+  private var _polls = immutable.Map[Int, Poll]()
 
   def main(args: Array[String]) {
     println("Hello, world!")
@@ -16,8 +17,28 @@ object App {
     }
   }
 
-  def createPoll(): Unit = {
+  def createPoll(query : String): Unit = {
+    println(query)
+    //_polls = _polls + (1 -> new Poll(name, anonymity))
+  }
 
+  def listPolls(): Unit = {
+    println("listPolls")
+  }
 
+  def deletePoll(id : String): Unit = {
+    println("deletePoll")
+  }
+
+  def startPoll(id : String): Unit = {
+    println("startPoll")
+  }
+
+  def stopPoll(id : String): Unit = {
+    println("stopPoll")
+  }
+
+  def pollResult(id : String): Unit = {
+    println("pollResult")
   }
 }
