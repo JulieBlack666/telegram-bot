@@ -2,5 +2,6 @@
 /create_poll (one_more_poll)
 /list
 hello there!
-/start_poll (123)
-/delete_poll (123)
+/delete_poll (0)
+/list
+/result (1)

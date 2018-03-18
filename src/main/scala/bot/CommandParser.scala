@@ -5,10 +5,10 @@ import scala.util.parsing.combinator.RegexParsers
 class CommandParser extends RegexParsers {
   def createPoll: Parser[Unit] = "/create_poll (" ~> """\w+""".r <~ ")" ^^ { s => App.createPoll(s) }
   def listPolls: Parser[Unit] = """^/list""".r ^^ { _ => App.listPolls() }
-  def deletePoll: Parser[Unit] = "/delete_poll (" ~> """\d+""".r <~ ")" ^^ { d => App.deletePoll(d) }
-  def startPoll: Parser[Unit] = "/start_poll (" ~> """\d+""".r <~ ")" ^^ { d => App.startPoll(d) }
-  def stopPoll: Parser[Unit] = "/stop_poll (" ~> """\d+""".r <~ ")" ^^ { d => App.stopPoll(d) }
-  def pollResult: Parser[Unit] = "/result (" ~> """\d+""".r <~ ")" ^^ { d => App.pollResult(d) }
+  def deletePoll: Parser[Unit] = "/delete_poll (" ~> """\d+""".r <~ ")" ^^ { d => App.deletePoll(d.toInt) }
+  def startPoll: Parser[Unit] = "/start_poll (" ~> """\d+""".r <~ ")" ^^ { d => App.startPoll(d.toInt) }
+  def stopPoll: Parser[Unit] = "/stop_poll (" ~> """\d+""".r <~ ")" ^^ { d => App.stopPoll(d.toInt) }
+  def pollResult: Parser[Unit] = "/result (" ~> """\d+""".r <~ ")" ^^ { d => App.pollResult(d.toInt) }
 
 
 

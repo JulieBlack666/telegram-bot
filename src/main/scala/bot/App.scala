@@ -26,23 +26,39 @@ object App {
   }
 
   def listPolls(): Unit = {
-    println("listPolls")
     _polls.foreach(x => println(x._1 + " : " + x._2.name))
   }
 
-  def deletePoll(query : String): Unit = {
-    println(query)
+  def deletePoll(id : Int): Unit = {
+    if(_polls.contains(id)) {
+      _polls = _polls - id
+      println("Poll deleted successfully")
+    } else {
+      println("Error : poll is not exist")
+    }
   }
 
-  def startPoll(query : String): Unit = {
-    println(query)
+  def startPoll(id : Int): Unit = {
+    if(_polls.contains(id)) {
+      println("The poll is started successfully")
+    } else {
+      println("Error : poll is not exist")
+    }
   }
 
-  def stopPoll(query : String): Unit = {
-    println(query)
+  def stopPoll(id : Int): Unit = {
+    if(_polls.contains(id)) {
+      println("The poll is stopped successfully")
+    } else {
+      println("Error : poll is not exist")
+    }
   }
 
-  def pollResult(query : String): Unit = {
-    println(query)
+  def pollResult(id : Int): Unit = {
+    if(_polls.contains(id)) {
+      println("The poll '" + _polls(id).name + "' has following result: ")
+    } else {
+      println("Error : poll is not exist")
+    }
   }
 }
