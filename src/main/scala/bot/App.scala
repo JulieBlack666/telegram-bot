@@ -7,6 +7,7 @@ import scala.io.Source
 object App {
 
   private var _polls = immutable.Map[Int, Poll]()
+  private var max_id = 0
 
   def main(args: Array[String]) {
     println("Hello, world!")
@@ -19,20 +20,14 @@ object App {
 
   def createPoll(query : String): Unit = {
     println(query)
-    val pattern = """^/create (.+)$""".r
-    val res = pattern.findFirstMatchIn(query).get.groupNames
-    println(res.toString())
-
-
-    var id = 0
-    if (_polls.nonEmpty)
-      id = _polls.maxBy { case (key, value) => key }._1 + 1
-
-    //_polls = _polls + (1 -> new Poll(name, id))
+    val id = max_id
+    max_id = max_id + 1
+    _polls = _polls + (id -> new Poll(query, id))
   }
 
   def listPolls(): Unit = {
     println("listPolls")
+    _polls.foreach(x => println(x._1 + " : " + x._2.name))
   }
 
   def deletePoll(query : String): Unit = {
