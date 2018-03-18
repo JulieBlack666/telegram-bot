@@ -26,19 +26,19 @@ object App {
     println("listPolls")
   }
 
-  def deletePoll(id : String): Unit = {
-    println("deletePoll")
+  def deletePoll(query : String): Unit = {
+    println(query)
   }
 
-  def startPoll(id : String): Unit = {
-    println("startPoll")
+  def startPoll(query : String): Unit = {
+    println(query)
   }
 
-  def stopPoll(id : String): Unit = {
-    println("stopPoll")
+  def stopPoll(query : String): Unit = {
+    println(query)
   }
 
-  def pollResult(id : String): Unit = {
-    println("pollResult")
+  def pollResult(query : String): Unit = {
+    println(query)
   }
 }
