@@ -1,8 +1,12 @@
-import bot.CommandParser
+package bot
 
 import scala.io.Source
 
-object app {
+
+object App {
+
+  private val _polls: scala.collection.immutable.Map[Int, Poll] = _
+
   def main(args: Array[String]) {
     println("Hello, world!")
     val parser = new CommandParser()
@@ -10,5 +14,10 @@ object app {
     for (line <- Source.fromFile(filename).getLines) {
       parser.apply(line)
     }
+  }
+
+  def createPoll(): Unit = {
+
+
   }
 }
