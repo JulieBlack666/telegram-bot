@@ -18,11 +18,12 @@ object App {
     }
   }
 
-  def createPoll(query : String): Unit = {
-    println(query)
+  def createPoll(name : String, flags : Iterable[String]): Unit = {
+    println(name + " ")
+    flags.foreach(println)
     val id = max_id
     max_id = max_id + 1
-    _polls = _polls + (id -> new Poll(query, id))
+    _polls = _polls + (id -> new Poll(name, id))
   }
 
   def listPolls(): Unit = {

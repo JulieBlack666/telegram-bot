@@ -1,5 +1,5 @@
-/create_poll (my_poll)
-/create_poll (one_more_poll)
+/create_poll (my_poll) (continuous)
+/create_poll (one_more_poll) (yes) (continuous)
 /list
 hello there!
 /delete_poll (0)
