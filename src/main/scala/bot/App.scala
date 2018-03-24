@@ -18,12 +18,15 @@ object App {
     }
   }
 
-  def createPoll(name : String, flags : Iterable[String]): Unit = {
-    println(name + " ")
-    flags.foreach(println)
+  def createPoll(name : String, anonimityStr : String, continuous_visibilityStr : String, startTime : String,
+                 stopTime : String): Unit = {
+    println(name + " : " + anonimityStr + ", " + continuous_visibilityStr )
+    val anonimity = if (anonimityStr == "yes") true else false
+    val continuous_visibility = if (continuous_visibilityStr == "continuous") true else false
     val id = max_id
     max_id = max_id + 1
-    _polls = _polls + (id -> new Poll(name, id))
+    _polls = _polls + (id -> new Poll(name, id, anonimity, continuous_visibility))
+    println(id)
   }
 
   def listPolls(): Unit = {
