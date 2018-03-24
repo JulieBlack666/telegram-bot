@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 
 import scala.collection.immutable
 import scala.io.Source
+import scala.util.Try
 
 
 object App {
@@ -12,7 +13,6 @@ object App {
   private var max_id = 0
 
   def main(args: Array[String]) {
-    println("Hello, world!")
     val parser = new CommandParser()
     val filename = "input.txt"
     for (line <- Source.fromFile(filename).getLines) {
@@ -22,18 +22,20 @@ object App {
 
   def createPoll(name : String, anonimityStr : String, continuous_visibilityStr : String, startTimeStr : String,
                  stopTimeStr : String): Unit = {
-    val anonimity = if (anonimityStr == "yes") true else false
+    val anonimity = anonimityStr == "yes"
     val continuous_visibility = if (continuous_visibilityStr == "continuous") true else false
     val format = new SimpleDateFormat("hh:mm:ss yy:MM:dd")
     val startTime = if (startTimeStr != null) format.parse(startTimeStr) else null
     val stopTime = if (stopTimeStr != null) format.parse(stopTimeStr) else null
+
     val id = max_id
-    max_id = max_id + 1
+    max_id += 1
     _polls = _polls + (id -> new Poll(name, id, anonimity, continuous_visibility, startTime, stopTime))
     println(id)
   }
 
   def listPolls(): Unit = {
+    println("current polls:")
     _polls.foreach(x => println(x._1 + " : " + x._2.name))
   }
 
@@ -48,6 +50,7 @@ object App {
 
   def startPoll(id : Int): Unit = {
     if(_polls.contains(id)) {
+      _polls(id).start()
       println("The poll is started successfully")
     } else {
       println("Error : poll is not exist")
@@ -56,6 +59,7 @@ object App {
 
   def stopPoll(id : Int): Unit = {
     if(_polls.contains(id)) {
+      _polls(id).stop()
       println("The poll is stopped successfully")
     } else {
       println("Error : poll is not exist")
@@ -64,7 +68,7 @@ object App {
 
   def pollResult(id : Int): Unit = {
     if(_polls.contains(id)) {
-      println("The poll '" + _polls(id).name + "' has following result: ")
+      println(_polls(id).getResult)
     } else {
       println("Error : poll is not exist")
     }

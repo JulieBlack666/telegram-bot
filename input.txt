@@ -1,7 +1,11 @@
-/create_poll (my_poll) (continuous)
+/create_poll (my_poll) (no) (afterstop)
 /create_poll (one_more_poll) (yes) (continuous) (13:22:00 18:03:26)
+/create_poll (one_more_poll_wrong) (yfefes) (afterstop)
+/create_poll (one_more_poll) (yes) (continuous) (13:22:00 18:03:26) (15:22:00 18:03:26)
+/start_poll (0)
+/result (0)
 /list
-hello there!
+/bad_request
 /delete_poll (0)
 /list
 /result (1)
