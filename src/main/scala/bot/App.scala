@@ -1,5 +1,7 @@
 package bot
 
+import java.text.SimpleDateFormat
+
 import scala.collection.immutable
 import scala.io.Source
 
@@ -18,14 +20,16 @@ object App {
     }
   }
 
-  def createPoll(name : String, anonimityStr : String, continuous_visibilityStr : String, startTime : String,
-                 stopTime : String): Unit = {
-    println(name + " : " + anonimityStr + ", " + continuous_visibilityStr )
+  def createPoll(name : String, anonimityStr : String, continuous_visibilityStr : String, startTimeStr : String,
+                 stopTimeStr : String): Unit = {
     val anonimity = if (anonimityStr == "yes") true else false
     val continuous_visibility = if (continuous_visibilityStr == "continuous") true else false
+    val format = new SimpleDateFormat("hh:mm:ss yy:MM:dd")
+    val startTime = if (startTimeStr != null) format.parse(startTimeStr) else null
+    val stopTime = if (stopTimeStr != null) format.parse(stopTimeStr) else null
     val id = max_id
     max_id = max_id + 1
-    _polls = _polls + (id -> new Poll(name, id, anonimity, continuous_visibility))
+    _polls = _polls + (id -> new Poll(name, id, anonimity, continuous_visibility, startTime, stopTime))
     println(id)
   }
 

@@ -1,7 +1,6 @@
 package bot
 
 import scala.util.parsing.combinator.RegexParsers
-import scala.util.parsing.combinator
 
 class CommandParser extends RegexParsers {
   def createPoll: Parser[Unit] = {
@@ -26,7 +25,7 @@ class CommandParser extends RegexParsers {
     val anonimity = Parser("(" ~> ("yes" | "no") <~ ")")
     val continuous = Parser("(" ~> ("afterstop" | "continuous") <~ ")")
     val startTime = Parser("(" ~> """\d{2}:\d{2}:\d{2} \d{2}:\d{2}:\d{2}""".r <~ ")")
-    
+
     val stopTime = startTime
     ("/create_poll (" ~> pollName <~ ")") ~ (anonimity.? | (anonimity ~ continuous.?) ~ startTime.? ~ stopTime.?) ^^
       { s => println(s)}
