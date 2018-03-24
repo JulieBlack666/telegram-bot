@@ -10,8 +10,8 @@ class CommandParser extends RegexParsers {
     val startTime = Parser("(" ~> """\d{2}:\d{2}:\d{2} \d{2}:\d{2}:\d{2}""".r <~ ")")
     val stopTime = startTime
     ("/create_poll (" ~> pollName <~ ")") ~ anonimity.? ~ continuous.? ~ startTime.? ~ stopTime.? ^^
-      { s =>  App.createPoll( s._1._1._1._1, s._1._1._1._2.getOrElse("yes"), s._1._1._2.getOrElse("afterstop"),
-        s._1._2.orNull, s._2.orNull)}
+      { s =>  App.createPoll( s._1._1._1._1, s._1._1._1._2, s._1._1._2,
+        s._1._2, s._2)}
   }
 
   def listPolls: Parser[Unit] = """^/list""".r ^^ { _ => App.listPolls() }
@@ -26,4 +26,8 @@ class CommandParser extends RegexParsers {
     case Success(result, _) => result
     case failure : NoSuccess => println("no success")
   }
+}
+
+object CommandParser {
+  def apply: CommandParser = new CommandParser()
 }

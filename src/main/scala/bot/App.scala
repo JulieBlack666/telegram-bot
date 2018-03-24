@@ -13,20 +13,20 @@ object App {
   private var max_id = 0
 
   def main(args: Array[String]) {
-    val parser = new CommandParser()
+    val parser = CommandParser
     val filename = "input.txt"
     for (line <- Source.fromFile(filename).getLines) {
       parser.apply(line)
     }
   }
 
-  def createPoll(name : String, anonimityStr : String, continuous_visibilityStr : String, startTimeStr : String,
-                 stopTimeStr : String): Unit = {
-    val anonimity = anonimityStr == "yes"
-    val continuous_visibility = if (continuous_visibilityStr == "continuous") true else false
+  def createPoll(name : String, anonimityStr : Option[String], continuous_visibilityStr : Option[String],
+                 startTimeStr : Option[String], stopTimeStr : Option[String]): Unit = {
+    val anonimity = anonimityStr.getOrElse("yes") == "yes"
+    val continuous_visibility = continuous_visibilityStr.getOrElse("afterstop") == "continuous"
     val format = new SimpleDateFormat("hh:mm:ss yy:MM:dd")
-    val startTime = if (startTimeStr != null) format.parse(startTimeStr) else null
-    val stopTime = if (stopTimeStr != null) format.parse(stopTimeStr) else null
+    val startTime = format.parse(startTimeStr.getOrElse("00:00:00 00:00:00"))
+    val stopTime = format.parse(stopTimeStr.getOrElse("00:00:00 00:00:00")) //TODO getOrElse()
 
     val id = max_id
     max_id += 1
@@ -39,7 +39,7 @@ object App {
     _polls.foreach(x => println(x._1 + " : " + x._2.name))
   }
 
-  def deletePoll(id : Int): Unit = {
+  def deletePoll(id : Int): Unit = { // TODO filter
     if(_polls.contains(id)) {
       _polls = _polls - id
       println("Poll deleted successfully")
@@ -65,6 +65,8 @@ object App {
       println("Error : poll is not exist")
     }
   }
+
+  //TODO private
 
   def pollResult(id : Int): Unit = {
     if(_polls.contains(id)) {
