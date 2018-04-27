@@ -13,7 +13,7 @@ class Poll(val name : String, val id : Int, anonymity : Boolean = true,
     if (active && !continuous_visibility)
       "Can't see before finished"
     else
-      "The poll" + name + "has following result:"
+      "The poll " + name + " has following result:"
   }
 
 }
