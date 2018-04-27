@@ -13,10 +13,9 @@ object App {
   private var max_id = 0
 
   def main(args: Array[String]) {
-    val parser = CommandParser
     val filename = "input.txt"
     for (line <- Source.fromFile(filename).getLines) {
-      parser.apply(line)
+      CommandParser.apply(line)
     }
   }
 
