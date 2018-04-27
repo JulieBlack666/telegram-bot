@@ -6,7 +6,7 @@ import scala.collection.immutable
 
 object  Commands {
 
-  private var _polls = immutable.Map[Int, Poll]()
+  var _polls = immutable.Map[Int, Poll]()
   private var max_id = 0
   private val dateFormat = new SimpleDateFormat("hh:mm:ss yy:MM:dd")
 

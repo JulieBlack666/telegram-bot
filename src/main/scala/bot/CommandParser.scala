@@ -1,6 +1,8 @@
 package bot
 
 import bot.Commands._
+import bot.ContextCommands._
+
 import scala.util.parsing.combinator.RegexParsers
 
 class CommandParser extends RegexParsers {
@@ -20,6 +22,9 @@ class CommandParser extends RegexParsers {
   def startPoll: Parser[Command] = "/start_poll (" ~> """\d+""".r <~ ")" ^^ { x => StartPoll(x.toInt) }
   def stopPoll: Parser[Command] = "/stop_poll (" ~> """\d+""".r <~ ")" ^^ { x => StopPoll(x.toInt) }
   def pollResult: Parser[Command] = "/result (" ~> """\d+""".r <~ ")" ^^ { x => PollResult(x.toInt) }
+  def beginContext: Parser[Command] = "/begin (" ~> """\d+""".r <~ ")" ^^ { x => BeginContext(x.toInt) }
+  def endContext: Parser[Command] = "/begin (" ~> """\d+""".r <~ ")" ^^ { x => EndContext() }
+  def view: Parser[Command] = "/begin (" ~> """\d+""".r <~ ")" ^^ { x => View() }
 
   def apply(input: String): Command = parse(
     createPoll | listPolls | deletePoll | startPoll | stopPoll | pollResult, input)
