@@ -15,5 +15,4 @@ class Poll(val name : String, val id : Int, anonymity : Boolean = true,
     else
       "The poll " + name + " has following result:"
   }
-
 }
