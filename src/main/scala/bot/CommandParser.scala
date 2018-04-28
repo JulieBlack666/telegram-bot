@@ -17,7 +17,7 @@ class CommandParser extends RegexParsers {
         s._1._2, s._2)}
   }
 
-  def listPolls: Parser[Command] = """^/list""".r ^^ { _ => new ListPolls }
+  def listPolls: Parser[Command] = """^/list""".r ^^ { _ => ListPolls() }
   def deletePoll: Parser[Command] = "/delete_poll (" ~> """\d+""".r <~ ")" ^^ { x => DeletePoll(x.toInt) }
   def startPoll: Parser[Command] = "/start_poll (" ~> """\d+""".r <~ ")" ^^ { x => StartPoll(x.toInt) }
   def stopPoll: Parser[Command] = "/stop_poll (" ~> """\d+""".r <~ ")" ^^ { x => StopPoll(x.toInt) }

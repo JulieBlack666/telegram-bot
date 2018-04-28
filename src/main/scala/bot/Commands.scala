@@ -34,7 +34,7 @@ object  Commands {
   case class ListPolls() extends Command {
     override def getReply: String = {
       if (_polls.isEmpty) "You have no polls"
-      else "Current polls:\n" + _polls.map{case (k, v) => k + " : " + v.name}.mkString("\n")
+      else "Current polls:\n" + _polls.map{case (k, v) => "  " + k + " : " + v.name}.mkString("\n")
     }
   }
 

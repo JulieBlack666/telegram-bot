@@ -1,12 +1,13 @@
 package app
 
-import bot.Bot
+import bot.Bot._
 import scala.io.Source
 
 object FileInput {
   def main(args: Array[String]) {
     val filename = "input.txt"
-    Source.fromFile(filename).getLines.foreach(line =>
-      println(Bot.handleCommand(line)))
+    for (line <- Source.fromFile(filename).getLines) {
+      println(handleCommand(line))
+    }
   }
 }
