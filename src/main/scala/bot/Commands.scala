@@ -7,13 +7,10 @@ import scala.collection.immutable
 object  Commands {
 
   var _polls = immutable.Map[Int, Poll]()
-  private var max_id = 0
   private val dateFormat = new SimpleDateFormat("hh:mm:ss yy:MM:dd")
 
   def parseTime(time : Option[String]) : Date = {
-    if (time.isDefined)
-      dateFormat.parse(time.get)
-    null
+    dateFormat.parse(time.getOrElse(return null))
   }
 
   case class CreatePoll(name : String, anonimity : Option[String], continuousVisibility : Option[String],
@@ -23,8 +20,7 @@ object  Commands {
       val continuousVisibilityValue = continuousVisibility.getOrElse("afterstop") == "continuous"
       val startTimeValue = parseTime(startTime)
       val stopTimeValue = parseTime(stopTime)
-      val id = max_id
-      max_id += 1
+      val id = _polls.keys.reduceOption(_ max _).getOrElse(-1) + 1
 
       _polls = _polls + (id -> new Poll(name, id, anonimityValue, continuousVisibilityValue, startTimeValue, stopTimeValue))
       id.toString
@@ -51,7 +47,6 @@ object  Commands {
     override def getReply: String = {
       _polls.get(id).map(_ => {
         _polls(id).start()
-        "The poll is started successfully"
       }).getOrElse("Poll does not exist")
     }
   }
@@ -60,7 +55,6 @@ object  Commands {
     override def getReply: String = {
       _polls.get(id).map(_ => {
         _polls(id).stop()
-        "The poll is stopped successfully"
       }).getOrElse("Poll does not exist")
     }
   }
@@ -74,6 +68,6 @@ object  Commands {
   }
 
   case class BadRequest() extends Command {
-    override def getReply: String = "Bad Request"
+    override def getReply: String = "Bad request"
   }
 }
