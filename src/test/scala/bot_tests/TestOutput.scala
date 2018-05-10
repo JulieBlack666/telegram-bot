@@ -69,6 +69,6 @@ class TestOutput extends FlatSpec {
   }
 
   it should "not stop non-active poll" in {
-    assert(CommandParser.apply("/stop_poll (1)").getReply == "Sorry, cannot stop poll if it is not active or a stop time is defined")
+    assert(CommandParser.apply("/stop_poll (2)").getReply == "Sorry, cannot stop poll if it is not active or a stop time is defined")
   }
 }
