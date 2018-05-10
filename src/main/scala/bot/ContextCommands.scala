@@ -4,7 +4,7 @@ import bot.Commands._polls
 
 object ContextCommands {
 
-  var selectedPoll : Poll = null
+  var selectedPoll : Poll = _
 
   case class BeginContext(id : Int) extends Command {
     override def getReply: String = {

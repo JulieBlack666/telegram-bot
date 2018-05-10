@@ -6,7 +6,8 @@ import scala.collection.immutable
 
 object  Commands {
 
-  var _polls = immutable.Map[Int, Poll]()
+  var _polls: Map[Int, Poll] = immutable.Map[Int, Poll]()
+  var maxId = 0
   private val dateFormat = new SimpleDateFormat("hh:mm:ss yy:MM:dd")
 
   def parseTime(time : Option[String]) : Date = {
@@ -20,9 +21,10 @@ object  Commands {
       val continuousVisibilityValue = continuousVisibility.getOrElse("afterstop") == "continuous"
       val startTimeValue = parseTime(startTime)
       val stopTimeValue = parseTime(stopTime)
-      val id = _polls.keys.reduceOption(_ max _).getOrElse(-1) + 1
+      val id = maxId
+      maxId += 1
 
-      _polls = _polls + (id -> new Poll(name, id, anonimityValue, continuousVisibilityValue, startTimeValue, stopTimeValue))
+      _polls = _polls + (id -> Poll(name, id, anonimityValue, continuousVisibilityValue, startTimeValue, stopTimeValue))
       id.toString
     }
   }
@@ -46,7 +48,15 @@ object  Commands {
   case class StartPoll(id : Int) extends Command {
     override def getReply: String = {
       _polls.get(id).map(_ => {
-        _polls(id).start()
+        val currentPoll = _polls(id)
+        val newPoll = currentPoll.start()
+        if (newPoll == currentPoll)
+          "Sorry, cannot start poll if it is active or a start time is defined"
+        else {
+          _polls = _polls - id
+          _polls = _polls + (id -> newPoll)
+          "The poll is started successfully"
+        }
       }).getOrElse("Poll does not exist")
     }
   }
@@ -54,7 +64,15 @@ object  Commands {
   case class StopPoll(id : Int) extends Command {
     override def getReply: String = {
       _polls.get(id).map(_ => {
-        _polls(id).stop()
+        val currentPoll = _polls(id)
+        val newPoll = currentPoll.stop()
+        if (newPoll == currentPoll)
+          "Sorry, cannot stop poll if it is not active or a stop time is defined"
+        else {
+          _polls = _polls - id
+          _polls = _polls + (id -> newPoll)
+          "The poll is stopped successfully"
+        }
       }).getOrElse("Poll does not exist")
     }
   }
