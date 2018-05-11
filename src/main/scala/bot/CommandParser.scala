@@ -1,5 +1,7 @@
 package bot
 
+import scala.util.Properties
+
 import bot.Commands._
 import bot.ContextCommands._
 
@@ -17,6 +19,14 @@ class CommandParser extends RegexParsers {
         s._1._2, s._2)}
   }
 
+  def addQuestion: Parser[Command] = {
+    val questionName = Parser("(" ~> """\w+""".r <~ ")")
+    val questionType = Parser("(" ~> ("open" | "choice" | "multi") <~ ")")
+    val variant = Parser(Properties.lineSeparator ~> """.*""".r )
+    ("/add_question" ~> questionName) ~ questionType ~ rep(variant) ^^
+      {case name~qType~variants => AddQuestion(name, qType, variants)}
+  }
+
   def listPolls: Parser[Command] = """^/list""".r ^^ { _ => ListPolls() }
   def deletePoll: Parser[Command] = "^/delete_poll".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => DeletePoll(x.toInt) }
   def startPoll: Parser[Command] = "^/start_poll".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => StartPoll(x.toInt) }
@@ -25,9 +35,11 @@ class CommandParser extends RegexParsers {
   def beginContext: Parser[Command] = "^/begin".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => BeginContext(x.toInt) }
   def endContext: Parser[Command] = "^/end".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => EndContext() }
   def view: Parser[Command] = "^/view".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => View() }
+  def delQuestion: Parser[Command] = "^/delete_question".r ~> "(" ~> """\d+""".r ^^ { x => DeleteQuestion(x.toInt)}
 
   def apply(input: String): Command = parse(
-    createPoll | listPolls | deletePoll | startPoll | stopPoll | pollResult, input)
+    createPoll | listPolls | deletePoll | startPoll | stopPoll | pollResult | beginContext | endContext |
+    view | addQuestion | delQuestion, input)
   match {
     case Success(result, _) => result
     case failure : NoSuccess => BadRequest()

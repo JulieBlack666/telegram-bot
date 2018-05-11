@@ -53,7 +53,6 @@ object  Commands {
         if (newPoll == currentPoll)
           "Sorry, cannot start poll if it is active or a start time is defined"
         else {
-          _polls = _polls - id
           _polls = _polls + (id -> newPoll)
           "The poll is started successfully"
         }
@@ -69,7 +68,6 @@ object  Commands {
         if (newPoll == currentPoll)
           "Sorry, cannot stop poll if it is not active or a stop time is defined"
         else {
-          _polls = _polls - id
           _polls = _polls + (id -> newPoll)
           "The poll is stopped successfully"
         }
