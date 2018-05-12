@@ -12,3 +12,7 @@
 /start_poll (0)
 /list
 /result (1)
+/begin (1)
+/add_question (question) (choice)
+(kek)
+(lol)

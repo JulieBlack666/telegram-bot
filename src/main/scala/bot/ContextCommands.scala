@@ -1,10 +1,12 @@
 package bot
 
+import bot.Question
 import bot.Commands._polls
 
 object ContextCommands {
 
   var selectedPoll : (Int, Poll) = _
+  var selectedQuestion : Question = _
 
   case class BeginContext(id : Int) extends Command {
     override def getReply: String = {
@@ -22,7 +24,7 @@ object ContextCommands {
         selectedPoll = null
         "You stopped working with the poll " + selectedPoll._2.name
       } else
-        "Sorry, no context is open"
+        "Sorry, no poll is selected"
     }
   }
 
@@ -32,17 +34,32 @@ object ContextCommands {
     }
   }
 
-  case class AddQuestion(name: String, qtype: String, variants : List[String]) extends Command {
+  case class AddQuestion(name: String, qtype: String, variants: List[String]) extends Command {
     override def getReply: String = {
-      ""
+      if (selectedPoll != null) {
+        val question = Question(name, QuestionType.withName(qtype), variants.map(v => Variant(v, 0)))
+        val newPoll = selectedPoll._2.addQuestion(question)
+        val pollId = selectedPoll._1
+        _polls = _polls + (pollId -> newPoll)
+        selectedPoll = (pollId, newPoll)
+        "Question added successfully"
+      }
+      else
+        "You should select poll first"
     }
   }
 
   case class DeleteQuestion(id : Int) extends Command{
     override def getReply: String = {
-      val newPoll = selectedPoll._2.deleteQuestion(id)
-      _polls = _polls + (selectedPoll._1 -> newPoll)
-      "The question has been deleted"
+      if (selectedPoll != null) {
+        val newPoll = selectedPoll._2.deleteQuestion(id)
+        val pollId = selectedPoll._1
+        _polls = _polls + (pollId -> newPoll)
+        selectedPoll = (pollId, newPoll)
+        "The question has been deleted"
+      }
+      else
+        "You chould select poll first"
     }
   }
 }

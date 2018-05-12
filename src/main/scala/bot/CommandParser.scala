@@ -49,3 +49,4 @@ class CommandParser extends RegexParsers {
 object CommandParser {
   def apply: CommandParser = new CommandParser()
 }
+
