@@ -2,6 +2,7 @@ package bot_tests
 
 import bot.CommandParser
 import bot.Commands._
+import bot.ContextCommands.AddQuestion
 import org.scalatest.FlatSpec
 
 
@@ -58,5 +59,12 @@ class TestParser extends FlatSpec {
 
   "Result" should "be parsed" in {
     assert(CommandParser.apply("/result (5)") == PollResult(5))
+  }
+
+  //TestQuestions
+  "Question" should "be created" in {
+    assert(CommandParser.apply("""/add_question (doctorwho) (multi)
+      (meow)""") ==
+      AddQuestion("doctorwho", "multi", List("meow")))
   }
 }

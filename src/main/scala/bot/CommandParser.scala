@@ -1,7 +1,5 @@
 package bot
 
-import scala.util.Properties
-
 import bot.Commands._
 import bot.ContextCommands._
 
@@ -20,10 +18,10 @@ class CommandParser extends RegexParsers {
   }
 
   def addQuestion: Parser[Command] = {
-    val questionName = Parser("(" ~> """\w+""".r <~ ")")
+    val questionName = Parser("(" ~> """.+""".r <~ ")")
     val questionType = Parser("(" ~> ("open" | "choice" | "multi") <~ ")")
-    val variant = Parser(Properties.lineSeparator ~> """.*""".r )
-    ("/add_question" ~> questionName) ~ questionType ~ rep(variant) ^^
+    val variant = Parser("\n" ~> ("(" ~> """.+""".r <~ ")"))
+    ("^/add_question".r ~> questionName) ~ questionType ~ rep(variant) ^^
       {case name~qType~variants => AddQuestion(name, qType, variants)}
   }
 
@@ -35,11 +33,15 @@ class CommandParser extends RegexParsers {
   def beginContext: Parser[Command] = "^/begin".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => BeginContext(x.toInt) }
   def endContext: Parser[Command] = "^/end".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => EndContext() }
   def view: Parser[Command] = "^/view".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => View() }
-  def delQuestion: Parser[Command] = "^/delete_question".r ~> "(" ~> """\d+""".r ^^ { x => DeleteQuestion(x.toInt)}
+  def delQuestion: Parser[Command] = "^/delete_question".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => DeleteQuestion(x.toInt)}
+  def answerQuestionOpen: Parser[Command] = "^/answer".r ~> ("(" ~> """\d+""".r <~ ")") ~ ("(" ~> """.+""".r <~ ")")^^
+    { x => AnswerQuestionOpen(x._1.toInt, x._2)}
+  def answerQuestionChoiceMulti: Parser[Command] = "^/answer".r ~> ("(" ~> """\d+""".r <~ ")") ~ ("(" ~> rep("""\d+""".r) <~ ")")^^
+    { x => AnswerQuestionChoiceMulti(x._1.toInt, x._2)}
 
   def apply(input: String): Command = parse(
     createPoll | listPolls | deletePoll | startPoll | stopPoll | pollResult | beginContext | endContext |
-    view | addQuestion | delQuestion, input)
+    view | addQuestion | delQuestion | answerQuestionOpen | answerQuestionChoiceMulti, input)
   match {
     case Success(result, _) => result
     case failure : NoSuccess => BadRequest()

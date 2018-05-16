@@ -25,7 +25,14 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
     }
   }
 
-  def answerMulti(answer: String): Question = ???
+  def answerMulti(answer: String): Question = {
+    val indices = answer.split(" ")
+    var newQuestion = this
+    for (index <- indices){
+      newQuestion = newQuestion.answerChoice(index)
+    }
+    newQuestion
+  }
 }
 
 case class Variant(variant : String, answCount : Int){

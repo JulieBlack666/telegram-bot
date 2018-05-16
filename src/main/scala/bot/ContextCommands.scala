@@ -1,12 +1,10 @@
 package bot
 
-import bot.Question
 import bot.Commands._polls
 
 object ContextCommands {
 
   var selectedPoll : (Int, Poll) = _
-  var selectedQuestion : Question = _
 
   case class BeginContext(id : Int) extends Command {
     override def getReply: String = {
@@ -30,7 +28,7 @@ object ContextCommands {
 
   case class View() extends Command {
     override def getReply: String = {
-      "Красивое представление опроса"
+      selectedPoll._2.questions.mkString(" ")
     }
   }
 
@@ -60,6 +58,17 @@ object ContextCommands {
       }
       else
         "You chould select poll first"
+    }
+  }
+  case class AnswerQuestionOpen(id : Int, answer: String) extends Command{
+    override def getReply: String = {
+      answer
+    }
+  }
+
+  case class AnswerQuestionChoiceMulti(id : Int, answer: List[String]) extends Command{
+    override def getReply: String = {
+      answer.mkString(" ")
     }
   }
 }
