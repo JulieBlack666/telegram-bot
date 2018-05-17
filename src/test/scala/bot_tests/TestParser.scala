@@ -61,10 +61,9 @@ class TestParser extends FlatSpec {
     assert(CommandParser.apply("/result (5)") == PollResult(5))
   }
 
-  //TestQuestions
   "Question" should "be created" in {
-    assert(CommandParser.apply("""/add_question (doctorwho) (multi)
-      (meow)""") ==
-      AddQuestion("doctorwho", "multi", List("meow")))
+    assert(CommandParser.apply(
+      "/add_question (doctor who?) (multi) \n (meow) \n (nobody)") ==
+      AddQuestion("doctor who?", "multi", List("meow", "nobody")))
   }
 }
