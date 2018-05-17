@@ -36,7 +36,7 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
 }
 
 case class Variant(variant : String, answCount : Int){
-  def vote() : Variant ={
+  def vote() : Variant = {
     this.copy(answCount = this.answCount + 1)
   }
 }

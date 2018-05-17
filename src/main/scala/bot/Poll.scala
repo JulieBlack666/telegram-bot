@@ -37,4 +37,8 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
   def deleteQuestion(id : Int): Poll ={
     this.copy(questions = this.questions.patch(id, Nil, 1))
   }
+
+  override def toString: String = {
+    questions.mkString(" ")
+  }
 }

@@ -11,3 +11,4 @@ libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
 libraryDependencies += "info.mukel" %% "telegrambot4s" % "3.0.14"
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
