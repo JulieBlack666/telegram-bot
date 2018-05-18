@@ -12,7 +12,7 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
   }
 
   def answerOpen(answer: String): Question = {
-    this.copy(variants = variants :+ Variant(answer, 1))
+    this.copy(variants = this.variants :+ Variant(answer, 1))
   }
 
   def answerChoice(answer: String): Question ={

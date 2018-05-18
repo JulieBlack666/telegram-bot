@@ -67,7 +67,8 @@ object ContextCommands {
     override def getReply: String = {
       withSelectedPoll {
         if (selectedPoll.getQuestion(index).getOrElse(return "No such question").q_type == QuestionType.open) {
-          selectedPoll.answerQuestion(index, answer).getOrElse(return "No such question")
+          selectedPoll = selectedPoll.answerQuestion(index, answer).getOrElse(return "No such question")
+          _polls = _polls + (selectedPoll.id -> selectedPoll)
           "Your answer has been recorded"
         }
         else
@@ -79,8 +80,10 @@ object ContextCommands {
   case class AnswerQuestionChoiceMulti(index : Int, answer: List[String]) extends Command{
     override def getReply: String = {
       withSelectedPoll {
-        if (selectedPoll.getQuestion(index).getOrElse(return "No such question").q_type != QuestionType.open) {
-          selectedPoll.answerQuestion(index, answer.mkString(" ")).getOrElse(return "No such question")
+        val questionType = selectedPoll.getQuestion(index).getOrElse(return "No such question").q_type
+        if (questionType == QuestionType.choice && answer.size == 1 || questionType == QuestionType.multi) {
+          selectedPoll = selectedPoll.answerQuestion(index, answer.mkString(" ")).getOrElse(return "No such question")
+          _polls = _polls + (selectedPoll.id -> selectedPoll)
           "Your answer has been recorded"
         }
         else
