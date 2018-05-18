@@ -34,8 +34,19 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
     this.copy(questions = this.questions :+ question)
   }
 
-  def deleteQuestion(id : Int): Poll ={
+  def deleteQuestion(index : Int): Poll = {
     this.copy(questions = this.questions.patch(id, Nil, 1))
+  }
+
+  def getQuestion(index: Int): Option[Question] = {
+    if (index > questions.size) {
+      None
+    } else Some(questions(index))
+  }
+
+  def answerQuestion(index: Int, answer: String) : Option[Poll] = {
+    val question = getQuestion(index).getOrElse(return None)
+    Some(this.copy(questions = this.questions.patch(index, List(question.answer(answer)), 1)))
   }
 
   override def toString: String = {

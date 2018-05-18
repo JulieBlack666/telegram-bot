@@ -52,10 +52,10 @@ object ContextCommands {
     }
   }
 
-  case class DeleteQuestion(id : Int) extends Command{
+  case class DeleteQuestion(index : Int) extends Command{
     override def getReply: String = {
       withSelectedPoll {
-        val newPoll = selectedPoll.deleteQuestion(id)
+        val newPoll = selectedPoll.deleteQuestion(index)
         val pollId = selectedPoll.id
         _polls = _polls + (pollId -> newPoll)
         selectedPoll =  newPoll
@@ -63,18 +63,28 @@ object ContextCommands {
       }
     }
   }
-  case class AnswerQuestionOpen(id : Int, answer: String) extends Command{
+  case class AnswerQuestionOpen(index : Int, answer: String) extends Command{
     override def getReply: String = {
       withSelectedPoll {
-        ???
+        if (selectedPoll.getQuestion(index).getOrElse(return "No such question").q_type == QuestionType.open) {
+          selectedPoll.answerQuestion(index, answer).getOrElse(return "No such question")
+          "Your answer has been recorded"
+        }
+        else
+          "Wrong question type"
       }
     }
   }
 
-  case class AnswerQuestionChoiceMulti(id : Int, answer: List[String]) extends Command{
+  case class AnswerQuestionChoiceMulti(index : Int, answer: List[String]) extends Command{
     override def getReply: String = {
       withSelectedPoll {
-        ???
+        if (selectedPoll.getQuestion(index).getOrElse(return "No such question").q_type != QuestionType.open) {
+          selectedPoll.answerQuestion(index, answer.mkString(" ")).getOrElse(return "No such question")
+          "Your answer has been recorded"
+        }
+        else
+          "Wrong question type"
       }
     }
   }

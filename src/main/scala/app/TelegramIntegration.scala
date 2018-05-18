@@ -12,11 +12,11 @@ object TelegramIntegration extends TelegramBot with Polling with Commands {
     for (text <- msg.text) {
       println(msg.source)
       println(msg.from.get.id)
-//      request(SendMessage(msg.source, handleCommand(text)))
+      request(SendMessage(msg.source, handleCommand(text)))
     }
   }
 
-  def main(a: Array[String]) = {
+  def main(a: Array[String]): Unit = {
     run()
   }
 }
