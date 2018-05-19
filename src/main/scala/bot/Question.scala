@@ -44,10 +44,13 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
     else {
       val variants_str = variants.zipWithIndex
         .map { case (x, i) => i.toString + ") " + x.toString }.mkString("\n")
+      val answered = voters.map(x => x.name).mkString(", ")
       s"""Question: $name
          |type: $q_type
          |variants:
          |$variants_str
+         |answered:
+         |$answered
          |""".stripMargin
       }
   }

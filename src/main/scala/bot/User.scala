@@ -1,5 +1,5 @@
 package bot
 
-class User(name : String, id : Long) {
+case class User(name : String, id : Long) {
 
 }
