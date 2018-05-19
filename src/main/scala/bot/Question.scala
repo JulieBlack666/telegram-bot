@@ -35,13 +35,20 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
   }
 
   override def toString: String = {
-    val variants_str = variants.zipWithIndex
-      .map{case (x, i) => i.toString + ") " + x.toString}.mkString("\n    ")
-    s"""Question: $name
-       |  type: $q_type
-       |  variants:
-       |    $variants_str
+    if (variants.isEmpty)
+      s"""Question: $name
+         |type: $q_type
      """.stripMargin
+    else {
+      val variants_str = variants.zipWithIndex
+        .map { case (x, i) => i.toString + ") " + x.toString }.mkString("\n")
+      s"""Question: $name
+         |type: $q_type
+         |variants:
+         |$variants_str
+     """.
+        stripMargin
+      }
   }
 }
 

@@ -24,8 +24,10 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
   def getResult : String = {
     if (active && !continuous_visibility)
       "Can't see before finished"
-    else {
-      val questions_pretty = questions.map(x => x.toString).mkString("\n  ")
+    else if (questions.isEmpty) {
+      "There is no questions yet"
+    } else {
+      val questions_pretty = questions.map(x => x.toString).mkString("\n")
       s"""The poll $name has following result:
          |$questions_pretty
        """.stripMargin

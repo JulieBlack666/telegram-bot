@@ -40,16 +40,16 @@ class TestOutput extends FlatSpec {
 
   it should "give a result if poll is stopped" in {
     CommandParser.apply("/stop_poll (1)").getReply
-    assert(CommandParser.apply("/result (1)").getReply == "The poll afterstop_poll has following result:")
+    assert(CommandParser.apply("/result (1)").getReply == "There is no questions yet")
   }
 
   it should "give results for continuous poll in any situation" in {
     CommandParser.apply("/create_poll (continuous_poll) (yes) (continuous)").getReply
-    assert(CommandParser.apply("/result (2)").getReply == "The poll continuous_poll has following result:")
+    assert(CommandParser.apply("/result (2)").getReply == "There is no questions yet")
     CommandParser.apply("/start_poll (2)").getReply
-    assert(CommandParser.apply("/result (2)").getReply == "The poll continuous_poll has following result:")
+    assert(CommandParser.apply("/result (2)").getReply == "There is no questions yet")
     CommandParser.apply("/stop_poll (2)").getReply
-    assert(CommandParser.apply("/result (2)").getReply == "The poll continuous_poll has following result:")
+    assert(CommandParser.apply("/result (2)").getReply == "There is no questions yet")
   }
 
   "Start poll" should "work for usual poll" in {
@@ -86,19 +86,30 @@ class TestOutput extends FlatSpec {
 
   "Add question" should "work for open question" in {
     BeginContext(5).getReply
-    assert(AddQuestion("question", "open", List()).getReply == "Question added successfully")
+    assert(AddQuestion("question1", "open", List()).getReply == "Question added successfully")
   }
 
   it should "work for chice question" in {
     BeginContext(5).getReply
-    assert(AddQuestion("question", "chice", List("1", "2")).getReply == "Question added successfully")
+    assert(AddQuestion("question2", "choice", List("1", "2")).getReply == "Question added successfully")
   }
 
   "View" should "show all added  questions" in {
     assert(View().getReply ==
       """Poll: test_poll id: 5
+        |start time: null end time: null
         |is not active
         |poll is anonymous
+        |  Question: question1
+        |    type: open
+        |  variants:
+        |
+        |
+        |  Question: question2
+        |  type: choice
+        |  variants:
+        |    0) 1: 0
+        |    1) 2: 0
         |
       """.stripMargin)
   }
