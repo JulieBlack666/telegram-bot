@@ -1,6 +1,6 @@
 package bot_tests
 
-import bot.{CommandParser, Question, QuestionType, User}
+import bot.{CommandParser, Question, QuestionType, User, Variant}
 import bot.ContextCommands._
 import bot.Commands._
 import org.scalatest.FlatSpec
@@ -87,23 +87,38 @@ class TestOutput extends FlatSpec {
 
   "Add question" should "work for open question" in {
     BeginContext(5).getReply(test_user)
-    assert(AddQuestion("question1", "open", List()).getReply == "Question added successfully")
+    assert(AddQuestion("question1", "open", List()).getReply(test_user) == "Question added successfully")
     assert(_polls.get(5).orNull.questions.contains(Question("question1", QuestionType.open, List())))
   }
 
   it should "work for choice question" in {
-    assert(AddQuestion("question2", "choice", List("1", "2")).getReply == "Question added successfully")
+    assert(AddQuestion("question2", "choice", List("1", "2")).getReply(test_user) == "Question added successfully")
   }
 
   it should "work for multi question" in {
-    assert(AddQuestion("question3", "multi", List("1", "2", "3")).getReply == "Question added successfully")
+    assert(AddQuestion("question3", "multi", List("1", "2", "3")).getReply(test_user) == "Question added successfully")
   }
 
   "Answer" should "not work if poll is not active" in {
-    assert(AnswerQuestionOpen(0, "answer").getReply == "Poll is not active yet")
+    assert(AnswerQuestionOpen(0, "answer").getReply(test_user) == "Poll is not active yet")
   }
 
   it should "work with open question" in {
-    StartPoll(5).getReply
+    StartPoll(5).getReply(test_user)
+    assert(AnswerQuestionOpen(0, "answer").getReply(test_user) == "Your answer has been recorded")
+    assert(_polls(5).questions.head.variants.contains(Variant("answer", 1)))
+  }
+
+  it should "work correctly with choice question" in {
+    assert(AnswerQuestionChoiceMulti(1, List("0")).getReply(test_user) == "Your answer has been recorded")
+    assert(_polls(5).questions(1).variants.contains(Variant("1", 1)))
+    assert(AnswerQuestionChoiceMulti(1, List("0")).getReply(test_user) == "Your answer has been recorded")
+    assert(_polls(5).questions(1).variants.contains(Variant("1", 2)))
+  }
+
+  it should "work correctly with multi question" in {
+    assert(AnswerQuestionChoiceMulti(2, List("0 1")).getReply(test_user) == "Your answer has been recorded")
+    assert(_polls(5).questions(2).variants.contains(Variant("1", 1)))
+    assert(_polls(5).questions(2).variants.contains(Variant("2", 1)))
   }
 }
