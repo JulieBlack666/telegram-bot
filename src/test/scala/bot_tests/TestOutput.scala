@@ -1,6 +1,6 @@
 package bot_tests
 
-import bot.CommandParser
+import bot.{CommandParser, Question, QuestionType}
 import bot.ContextCommands._
 import bot.Commands._
 import org.scalatest.FlatSpec
@@ -87,28 +87,23 @@ class TestOutput extends FlatSpec {
   "Add question" should "work for open question" in {
     BeginContext(5).getReply
     assert(AddQuestion("question1", "open", List()).getReply == "Question added successfully")
+    assert(_polls.get(5).orNull.questions.contains(Question("question1", QuestionType.open, List())))
   }
 
-  it should "work for chice question" in {
-    BeginContext(5).getReply
+  it should "work for choice question" in {
     assert(AddQuestion("question2", "choice", List("1", "2")).getReply == "Question added successfully")
   }
 
-  "View" should "show all added  questions" in {
-    assert(View().getReply ==
-      """Poll: test_poll id: 5
-        |start time: null end time: null
-        |is not active
-        |poll is anonymous
-        |Question: question1
-        |type: open
-        |
-        |  Question: question2
-        |type: choice
-        |variants:
-        |0) 1: 0
-        |1) 2: 0
-        |
-      """.stripMargin)
+  it should "work for multi question" in {
+    assert(AddQuestion("question3", "multi", List("1", "2", "3")).getReply == "Question added successfully")
+  }
+
+  "Answer" should "not work if poll is not active" in {
+    assert(AnswerQuestionOpen(0, "answer").getReply == "Poll is not active yet")
+  }
+
+  it should "work with open question" in {
+    StartPoll(5).getReply
+    
   }
 }

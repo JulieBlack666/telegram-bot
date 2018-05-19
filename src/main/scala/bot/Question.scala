@@ -38,7 +38,7 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
     if (variants.isEmpty)
       s"""Question: $name
          |type: $q_type
-     """.stripMargin
+         |""".stripMargin
     else {
       val variants_str = variants.zipWithIndex
         .map { case (x, i) => i.toString + ") " + x.toString }.mkString("\n")
@@ -46,8 +46,7 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
          |type: $q_type
          |variants:
          |$variants_str
-     """.
-        stripMargin
+         |""".stripMargin
       }
   }
 }
