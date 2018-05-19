@@ -25,8 +25,9 @@ object ContextCommands {
   case class EndContext() extends Command {
     override def getReply: String = {
       WithSelectedPoll {
+        val pollToEnd = _polls(selectedPoll.get)
         selectedPoll = null
-        "You stopped working with the poll " + _polls(selectedPoll.get).name
+        "You stopped working with the poll " + pollToEnd.name
       }
     }
   }
@@ -44,9 +45,7 @@ object ContextCommands {
       WithSelectedPoll {
         val question = Question(name, QuestionType.withName(qtype), variants.map(v => Variant(v, 0)))
         val newPoll = _polls(selectedPoll.get).addQuestion(question)
-        val pollId = _polls(selectedPoll.get).id
-        _polls = _polls + (pollId -> newPoll)
-        _polls(selectedPoll.get) = newPoll
+        _polls = _polls + (selectedPoll.get -> newPoll)
         "Question added successfully"
       }
     }
@@ -56,8 +55,7 @@ object ContextCommands {
     override def getReply: String = {
       WithSelectedPoll {
         val newPoll = _polls(selectedPoll.get).deleteQuestion(index)
-        val pollId = _polls(selectedPoll.get).id
-        _polls = _polls + (pollId -> newPoll)
+        _polls = _polls + (selectedPoll.get -> newPoll)
         "The question has been deleted"
       }
     }
@@ -68,8 +66,8 @@ object ContextCommands {
         if (!_polls(selectedPoll.get).active)
           "Poll is not active yet"
         else if (_polls(selectedPoll.get).getQuestion(index).getOrElse(return "No such question").q_type == QuestionType.open) {
-          _polls(selectedPoll) = _polls(selectedPoll.get).answerQuestion(index, answer).getOrElse(return "No such question")
-          _polls = _polls + (_polls(selectedPoll.get).id -> _polls(selectedPoll.get))
+          val newPoll = _polls(selectedPoll.get).answerQuestion(index, answer).getOrElse(return "No such question")
+          _polls = _polls + (selectedPoll.get -> newPoll)
           "Your answer has been recorded"
         }
         else
@@ -85,8 +83,8 @@ object ContextCommands {
         if (!_polls(selectedPoll.get).active)
           "Poll is not active yet"
         else if (questionType == QuestionType.choice && answer.size == 1 || questionType == QuestionType.multi) {
-          _polls(selectedPoll) = _polls(selectedPoll.get).answerQuestion(index, answer.mkString(" ")).getOrElse(return "No such question")
-          _polls = _polls + (_polls(selectedPoll.get).id -> _polls(selectedPoll.get))
+          val newPoll = _polls(selectedPoll.get).answerQuestion(index, answer.mkString(" ")).getOrElse(return "No such question")
+          _polls = _polls + (selectedPoll.get -> newPoll)
           "Your answer has been recorded"
         }
         else
