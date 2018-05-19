@@ -1,6 +1,6 @@
 package bot
 
-import java.util.{Calendar, Date}
+import java.util.Date
 
 case class Poll(name : String, id : Int, anonymity : Boolean = true,
                 continuous_visibility : Boolean = false,
@@ -56,13 +56,11 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
   override def toString: String = {
     val is_active = if (active) "active now" else "is not active"
     val is_anon = if (anonymity) "poll is anonymous" else "poll is not anonymous"
-    val questions_pretty = questions.map(x => x.toString).mkString("\n")
+//    val questions_pretty = questions.map(x => x.name).mkString("\n")
     s"""Poll: $name id: $id
       |start time: $start_time end time: $end_time
       |$is_active
-      |$is_anon
-      |$questions_pretty
-      |""".stripMargin
+      |$is_anon""".stripMargin
 //    questions.mkString(" ")
   }
 }

@@ -2,8 +2,9 @@
 /create_poll (my_poll)
 /start_poll (0)
 /begin (0)
-/add_question (doctor who?) (multi)\n(Pineapple)\n(grrrrr)\n(meow)
+/add_question (doctor who?) (open)
 /result (0)
-/answer (0) (0)
-/result
+/answer (0) (answ1)
+/result (0)
+/answer (0) (answ2)
 /view
