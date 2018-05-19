@@ -95,6 +95,11 @@ class TestOutput extends FlatSpec {
   }
 
   "View" should "show all added  questions" in {
-    assert(View().getReply == "")
+    assert(View().getReply ==
+      """Poll: test_poll id: 5
+        |is not active
+        |poll is anonymous
+        |
+      """.stripMargin)
   }
 }
