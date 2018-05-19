@@ -1,5 +1,5 @@
 package bot
 
-class User {
+class User(name : String, id : Int) {
 
 }

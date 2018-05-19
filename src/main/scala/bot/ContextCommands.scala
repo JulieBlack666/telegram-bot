@@ -14,7 +14,7 @@ object ContextCommands {
   }
 
   case class BeginContext(id : Int) extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       _polls.get(id).map(_ =>{
         selectedPoll = Some(id)
         "Now you are working with context of the poll " + _polls(id).name }
@@ -23,7 +23,7 @@ object ContextCommands {
   }
 
   case class EndContext() extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       WithSelectedPoll {
         val pollToEnd = _polls(selectedPoll.get)
         selectedPoll = null
@@ -33,7 +33,7 @@ object ContextCommands {
   }
 
   case class View() extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       WithSelectedPoll {
         _polls(selectedPoll.get).toString
       }
@@ -41,7 +41,7 @@ object ContextCommands {
   }
 
   case class AddQuestion(name: String, qtype: String, variants: List[String]) extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       WithSelectedPoll {
         val question = Question(name, QuestionType.withName(qtype), variants.map(v => Variant(v, 0)))
         val newPoll = _polls(selectedPoll.get).addQuestion(question)
@@ -52,7 +52,7 @@ object ContextCommands {
   }
 
   case class DeleteQuestion(index : Int) extends Command{
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       WithSelectedPoll {
         val newPoll = _polls(selectedPoll.get).deleteQuestion(index)
         _polls = _polls + (selectedPoll.get -> newPoll)
@@ -61,7 +61,7 @@ object ContextCommands {
     }
   }
   case class AnswerQuestionOpen(index : Int, answer: String) extends Command{
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       WithSelectedPoll {
         if (!_polls(selectedPoll.get).active)
           "Poll is not active yet"
@@ -77,7 +77,7 @@ object ContextCommands {
   }
 
   case class AnswerQuestionChoiceMulti(index : Int, answer: List[String]) extends Command{
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       WithSelectedPoll {
         val questionType = _polls(selectedPoll.get).getQuestion(index).getOrElse(return "No such question").q_type
         if (!_polls(selectedPoll.get).active)

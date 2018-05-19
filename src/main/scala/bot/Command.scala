@@ -1,5 +1,5 @@
 package bot
 
 trait Command {
-  def getReply: String
+  def getReply(user: User): String
 }
