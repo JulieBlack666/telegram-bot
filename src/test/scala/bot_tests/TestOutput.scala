@@ -117,8 +117,15 @@ class TestOutput extends FlatSpec {
   }
 
   it should "work correctly with multi question" in {
-    assert(AnswerQuestionChoiceMulti(2, List("0 1")).getReply(test_user) == "Your answer has been recorded")
+    assert(AnswerQuestionChoiceMulti(2, List("0", "1")).getReply(test_user) == "Your answer has been recorded")
     assert(_polls(5).questions(2).variants.contains(Variant("1", 1)))
     assert(_polls(5).questions(2).variants.contains(Variant("2", 1)))
   }
+
+  it should "fail with wrong question type" in{
+    assert(AnswerQuestionChoiceMulti(1, List("0", " 1")).getReply(test_user) == "Wrong question type")
+    assert(AnswerQuestionOpen(2, "djdj").getReply(test_user) == "Wrong question type")
+  }
+
+
 }

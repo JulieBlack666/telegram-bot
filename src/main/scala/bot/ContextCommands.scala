@@ -88,7 +88,7 @@ object ContextCommands {
           "Your answer has been recorded"
         }
         else
-          "Can"
+          "Wrong question type"
       }
     }
   }
