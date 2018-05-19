@@ -2,13 +2,15 @@ package bot
 
 import bot.QuestionType.QuestionType
 
-case class Question(name : String, q_type : QuestionType, variants : List[Variant]){
-  def answer(answ: String): Question ={
-    q_type match {
+case class Question(name : String, q_type : QuestionType, variants : List[Variant], voters : List[User] = List()){
+
+  def answer(answ: String, user: User): Question ={
+    val newQuestion = q_type match {
       case QuestionType.open => answerOpen(answ)
       case QuestionType.choice => answerChoice(answ)
       case QuestionType.multi => answerMulti(answ)
     }
+    newQuestion.copy(voters = this.voters :+ user)
   }
 
   def answerOpen(answer: String): Question = {

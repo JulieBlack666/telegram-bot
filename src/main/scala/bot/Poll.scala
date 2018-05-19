@@ -48,9 +48,9 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
     } else Some(questions(index))
   }
 
-  def answerQuestion(index: Int, answer: String) : Option[Poll] = {
+  def answerQuestion(index: Int, answer: String, user: User) : Option[Poll] = {
     val question = getQuestion(index).getOrElse(return None)
-    Some(this.copy(questions = this.questions.patch(index, List(question.answer(answer)), 1)))
+    Some(this.copy(questions = this.questions.patch(index, List(question.answer(answer, user)), 1)))
   }
 
   override def toString: String = {

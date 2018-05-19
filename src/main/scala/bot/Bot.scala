@@ -6,7 +6,7 @@ import scala.io.Source
 
 
 object Bot {
-  def handleCommand(command: String) : String = {
+  def handleCommand(command: String, user : User) : String = {
      CommandParser.apply(command).getReply(new User("test", 1))
   }
 }

@@ -66,7 +66,7 @@ object ContextCommands {
         if (!_polls(selectedPoll.get).active)
           "Poll is not active yet"
         else if (_polls(selectedPoll.get).getQuestion(index).getOrElse(return "No such question").q_type == QuestionType.open) {
-          val newPoll = _polls(selectedPoll.get).answerQuestion(index, answer).getOrElse(return "No such question")
+          val newPoll = _polls(selectedPoll.get).answerQuestion(index, answer, user).getOrElse(return "No such question")
           _polls = _polls + (selectedPoll.get -> newPoll)
           "Your answer has been recorded"
         }
@@ -83,12 +83,12 @@ object ContextCommands {
         if (!_polls(selectedPoll.get).active)
           "Poll is not active yet"
         else if (questionType == QuestionType.choice && answer.size == 1 || questionType == QuestionType.multi) {
-          val newPoll = _polls(selectedPoll.get).answerQuestion(index, answer.mkString(" ")).getOrElse(return "No such question")
+          val newPoll = _polls(selectedPoll.get).answerQuestion(index, answer.mkString(" "), user).getOrElse(return "No such question")
           _polls = _polls + (selectedPoll.get -> newPoll)
           "Your answer has been recorded"
         }
         else
-          "Wrong question type"
+          "Can"
       }
     }
   }

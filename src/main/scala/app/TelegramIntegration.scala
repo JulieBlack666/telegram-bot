@@ -1,7 +1,12 @@
 package app
 
-import info.mukel.telegrambot4s._, api._, methods._, models._, declarative._
+import info.mukel.telegrambot4s._
+import api._
+import methods._
+import models._
+import declarative._
 import bot.Bot._
+import bot.User
 
 
 object TelegramIntegration extends TelegramBot with Polling with Commands {
@@ -9,7 +14,7 @@ object TelegramIntegration extends TelegramBot with Polling with Commands {
 
   override def receiveMessage(msg: Message): Unit = {
     for (text <- msg.text) {
-      request(SendMessage(msg.source, handleCommand(text)))
+      request(SendMessage(msg.source, handleCommand(text, new User(msg.from.get.firstName, msg.chat.id))))
     }
   }
 
