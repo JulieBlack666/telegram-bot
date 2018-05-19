@@ -49,9 +49,7 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
          |type: $q_type
          |variants:
          |$variants_str
-         |answered:
-         |$answered
-         |""".stripMargin
+         |answered users: $answered""".stripMargin
       }
   }
 }
