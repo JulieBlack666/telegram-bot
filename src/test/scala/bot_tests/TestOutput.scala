@@ -1,6 +1,8 @@
 package bot_tests
 
 import bot.CommandParser
+import bot.ContextCommands._
+import bot.Commands._
 import org.scalatest.FlatSpec
 
 class TestOutput extends FlatSpec {
@@ -70,5 +72,29 @@ class TestOutput extends FlatSpec {
 
   it should "not stop non-active poll" in {
     assert(CommandParser.apply("/stop_poll (2)").getReply == "Sorry, cannot stop poll if it is not active or a stop time is defined")
+  }
+
+  "Begin" should "start the context" in {
+    CreatePoll("test_poll", None, None, None, None).getReply
+    assert(BeginContext(5).getReply == "Now you are working with context of the poll test_poll")
+  }
+
+  "End" should "end the context" in {
+    assert(EndContext().getReply == "You stopped working with the poll test_poll")
+    assert(selectedPoll == null)
+  }
+
+  "Add question" should "work for open question" in {
+    BeginContext(5).getReply
+    assert(AddQuestion("question", "open", List()).getReply == "Question added successfully")
+  }
+
+  it should "work for chice question" in {
+    BeginContext(5).getReply
+    assert(AddQuestion("question", "chice", List("1", "2")).getReply == "Question added successfully")
+  }
+
+  "View" should "show all added  questions" in {
+    assert(View().getReply == "")
   }
 }

@@ -2,7 +2,7 @@ package bot_tests
 
 import bot.CommandParser
 import bot.Commands._
-import bot.ContextCommands.AddQuestion
+import bot.ContextCommands._
 import org.scalatest.FlatSpec
 
 
@@ -61,9 +61,48 @@ class TestParser extends FlatSpec {
     assert(CommandParser.apply("/result (5)") == PollResult(5))
   }
 
-  "Question" should "be created" in {
+  "Begin" should "be parsed" in {
+    assert(CommandParser.apply("/begin (5)") == BeginContext(5))
+  }
+
+  "End" should "be parsed" in {
+    assert(CommandParser.apply("/end") == EndContext())
+  }
+
+  "Question" should "be parsed open" in {
+    assert(CommandParser.apply("/add_question (doctor who?) (open)") ==
+      AddQuestion("doctor who?", "open", List()))
+  }
+
+  it should "be parsed choice" in {
+    assert(CommandParser.apply(
+      "/add_question (doctor who?) (choice) \n (meow) \n (nobody)") ==
+      AddQuestion("doctor who?", "choice", List("meow", "nobody")))
+  }
+
+  it should "be parsed multi" in {
     assert(CommandParser.apply(
       "/add_question (doctor who?) (multi) \n (meow) \n (nobody)") ==
       AddQuestion("doctor who?", "multi", List("meow", "nobody")))
+  }
+
+  "View" should "be parsed"in {
+    assert(CommandParser.apply("/view") == View())
+  }
+
+  "Answer question" should "be parsed open" in {
+    assert(CommandParser.apply("/answer (0) (hello)") == AnswerQuestionOpen(0, "hello"))
+  }
+
+  it should "be parsed choice" in {
+    assert(CommandParser.apply("/answer (0) (1)") == AnswerQuestionChoiceMulti(0, List("1")))
+  }
+
+  it should "be parsed multi" in {
+    assert(CommandParser.apply("/answer (0) (1 2 3)") == AnswerQuestionChoiceMulti(0, List("1", "2", "3")))
+  }
+
+  "Delete question" should "be parsed" in {
+    assert(CommandParser.apply("/delete_question (0)") == DeleteQuestion(0))
   }
 }

@@ -39,7 +39,7 @@ class CommandParser extends RegexParsers {
 
   def beginContext: Parser[Command] = "^/begin".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => BeginContext(x.toInt) }
 
-  def endContext: Parser[Command] = "^/end".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => EndContext() }
+  def endContext: Parser[Command] = "^/end".r ^^ { x => EndContext() }
 
   def view: Parser[Command] = "^/view".r ^^ { x => View() }
 
