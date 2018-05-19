@@ -6,7 +6,7 @@ import bot.Commands._
 import org.scalatest.FlatSpec
 
 class TestOutput extends FlatSpec {
-  val test_user = new User("test_user", 1)
+  val test_user = User("test_user", 1)
   "List polls" should "be empty" in {
     assert(CommandParser.apply("/list").getReply(test_user) == "You have no polls")
   }
@@ -112,8 +112,6 @@ class TestOutput extends FlatSpec {
   it should "work correctly with choice question" in {
     assert(AnswerQuestionChoiceMulti(1, List("0")).getReply(test_user) == "Your answer has been recorded")
     assert(_polls(5).questions(1).variants.contains(Variant("1", 1)))
-    assert(AnswerQuestionChoiceMulti(1, List("0")).getReply(test_user) == "Your answer has been recorded")
-    assert(_polls(5).questions(1).variants.contains(Variant("1", 2)))
   }
 
   it should "work correctly with multi question" in {
@@ -123,9 +121,19 @@ class TestOutput extends FlatSpec {
   }
 
   it should "fail with wrong question type" in{
-    assert(AnswerQuestionChoiceMulti(1, List("0", " 1")).getReply(test_user) == "Wrong question type")
-    assert(AnswerQuestionOpen(2, "djdj").getReply(test_user) == "Wrong question type")
+    val newUser = User("name", 2)
+    assert(AnswerQuestionChoiceMulti(1, List("0", " 1")).getReply(newUser) == "Wrong question type")
+    assert(AnswerQuestionOpen(2, "djdj").getReply(newUser) == "Wrong question type")
   }
 
+  it should "fail if one user votes twice" in {
+    val newUser = User("name", 2)
+    AnswerQuestionChoiceMulti(1, List("0")).getReply(newUser)
+    assert(AnswerQuestionChoiceMulti(1, List("0")).getReply(newUser) == "You already answered")
+  }
 
+  "Delete question" should "work correctly" in {
+    val questionToDelete = _polls(5).getQuestion(0).get
+    assert(DeleteQuestion(0).getReply(test_user) == "The question has been deleted")
+  }
 }
