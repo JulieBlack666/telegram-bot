@@ -33,11 +33,25 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
     }
     newQuestion
   }
+
+  override def toString: String = {
+    val variants_str = variants.zipWithIndex
+      .map{case (x, i) => i.toString + ") " + x.toString}.mkString("\n    ")
+    s"""Question: $name
+       |  type: $q_type
+       |  variants:
+       |    $variants_str
+     """.stripMargin
+  }
 }
 
 case class Variant(variant : String, answCount : Int){
   def vote() : Variant = {
     this.copy(answCount = this.answCount + 1)
+  }
+
+  override def toString: String = {
+    s"$variant: $answCount"
   }
 }
 

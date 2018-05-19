@@ -6,8 +6,6 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
                 continuous_visibility : Boolean = false,
                 start_time : Date = null, end_time : Date = null,
                 active : Boolean = false, questions : List[Question] = List()) {
-  // .copy case classes
-  // pattern matching flag => ...
 
   def start(): Poll = {
     if (start_time != null || active)
@@ -26,8 +24,12 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
   def getResult : String = {
     if (active && !continuous_visibility)
       "Can't see before finished"
-    else
-      "The poll " + name + " has following result:"
+    else {
+      val questions_pretty = questions.map(x => x.toString).mkString("\n  ")
+      s"""The poll $name has following result:
+         |$questions_pretty
+       """.stripMargin
+    }
   }
 
   def addQuestion(question: Question): Poll ={
@@ -50,6 +52,15 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
   }
 
   override def toString: String = {
-    questions.mkString(" ")
+    val is_active = if (active) "active now" else "is not active"
+    val is_anon = if (anonymity) "poll is anonymous" else "poll is not anonymous"
+    val questions_pretty = questions.map(x => x.toString).mkString("\n  ")
+    s"""Poll: $name id: $id
+      |start time: $start_time end time: $end_time
+      |$is_active
+      |$is_anon
+      |$questions_pretty
+    """.stripMargin
+//    questions.mkString(" ")
   }
 }
