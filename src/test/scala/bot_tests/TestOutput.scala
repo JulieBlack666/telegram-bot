@@ -100,16 +100,14 @@ class TestOutput extends FlatSpec {
         |start time: null end time: null
         |is not active
         |poll is anonymous
-        |  Question: question1
-        |    type: open
-        |  variants:
-        |
+        |Question: question1
+        |type: open
         |
         |  Question: question2
-        |  type: choice
-        |  variants:
-        |    0) 1: 0
-        |    1) 2: 0
+        |type: choice
+        |variants:
+        |0) 1: 0
+        |1) 2: 0
         |
       """.stripMargin)
   }
