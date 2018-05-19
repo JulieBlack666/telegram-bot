@@ -1,20 +1,9 @@
 /list
-/create_poll (my_poll) (no) (afterstop)
-/create_poll (one_more_poll) (yes) (continuous) (13:22:00 18:03:26)
-/create_poll (one_more_poll_wrong) (yfefes) (afterstop)
-/create_poll (one_more_poll) (yes) (continuous) (13:22:00 18:03:26) (15:22:00 18:03:26)
-/begin (1)
+/create_poll (my_poll)
+/start_poll (0)
+/begin (0)
 /add_question (doctor who?) (multi)\n(Pineapple)\n(grrrrr)\n(meow)
-/start_poll (0)
-/start_poll (1)
 /result (0)
-/list
-/bad_request
-/delete_poll (0)
-/start_poll (0)
-/list
-/result (1)
-/begin (1)
-/add_question (question) (choice)
-(kek)
-(lol)
+/answer (0) (0)
+/result
+/view

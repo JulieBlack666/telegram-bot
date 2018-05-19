@@ -65,6 +65,7 @@ object ContextCommands {
       WithSelectedPoll {
         if (!_polls(selectedPoll.get).active)
           "Poll is not active yet"
+        else if(_polls(selectedPoll.get).getQuestion(index).get.voters.contains(user)) "You already answered"
         else if (_polls(selectedPoll.get).getQuestion(index).getOrElse(return "No such question").q_type == QuestionType.open) {
           val newPoll = _polls(selectedPoll.get).answerQuestion(index, answer, user).getOrElse(return "No such question")
           _polls = _polls + (selectedPoll.get -> newPoll)
@@ -82,6 +83,7 @@ object ContextCommands {
         val questionType = _polls(selectedPoll.get).getQuestion(index).getOrElse(return "No such question").q_type
         if (!_polls(selectedPoll.get).active)
           "Poll is not active yet"
+        else if(_polls(selectedPoll.get).getQuestion(index).get.voters.contains(user)) "You already answered"
         else if (questionType == QuestionType.choice && answer.size == 1 || questionType == QuestionType.multi) {
           val newPoll = _polls(selectedPoll.get).answerQuestion(index, answer.mkString(" "), user).getOrElse(return "No such question")
           _polls = _polls + (selectedPoll.get -> newPoll)
