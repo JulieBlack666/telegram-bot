@@ -25,7 +25,7 @@ object  Commands {
       maxId += 1
 
       _polls = _polls + (id -> Poll(name, id, anonimityValue, continuousVisibilityValue, startTimeValue, stopTimeValue))
-      id.toString
+      "Poll created. Poll id: " + id.toString
     }
   }
 

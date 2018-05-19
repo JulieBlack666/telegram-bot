@@ -36,20 +36,26 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
     newQuestion
   }
 
-  override def toString: String = {
-    if (variants.isEmpty)
+  def makeString(noResult : Boolean, anonymity : Boolean): String = {
+    if (q_type == QuestionType.open)
       s"""Question: $name
          |type: $q_type
          |""".stripMargin
     else {
-      val variants_str = variants.zipWithIndex
+      val variants_str = noResult match {
+        case true => variants.zipWithIndex
+          .map { case (x, i) => i.toString + ") " + x.variant }.mkString("\n")
+        case false => variants.zipWithIndex
         .map { case (x, i) => i.toString + ") " + x.toString }.mkString("\n")
-      val answered = voters.map(x => x.name).mkString(", ")
+      }
+      val answered = if (!anonymity)
+        "answered users: " + voters.map(x => x.name).mkString(", ")
+      else ""
       s"""Question: $name
          |type: $q_type
          |variants:
          |$variants_str
-         |answered users: $answered""".stripMargin
+         |$answered""".stripMargin
       }
   }
 }
@@ -60,7 +66,7 @@ case class Variant(variant : String, answCount : Int){
   }
 
   override def toString: String = {
-    s"$variant: $answCount"
+    s"$variant: $answCount "
   }
 }
 

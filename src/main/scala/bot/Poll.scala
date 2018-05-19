@@ -27,7 +27,7 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
     else if (questions.isEmpty) {
       "There is no questions yet"
     } else {
-      val questions_pretty = questions.map(x => x.toString).mkString("\n")
+      val questions_pretty = questions.map(x => x.makeString(noResult = false, anonymity = anonymity)).mkString("\n")
       s"""The poll $name has following result:
          |$questions_pretty
        """.stripMargin
@@ -56,11 +56,11 @@ case class Poll(name : String, id : Int, anonymity : Boolean = true,
   override def toString: String = {
     val is_active = if (active) "active now" else "is not active"
     val is_anon = if (anonymity) "poll is anonymous" else "poll is not anonymous"
-//    val questions_pretty = questions.map(x => x.name).mkString("\n")
+    val questions_pretty = questions.map(x => x.makeString(noResult = true, anonymity = anonymity)).mkString("\n")
     s"""Poll: $name id: $id
       |start time: $start_time end time: $end_time
       |$is_active
-      |$is_anon""".stripMargin
-//    questions.mkString(" ")
+      |$is_anon
+      |$questions_pretty""".stripMargin
   }
 }
