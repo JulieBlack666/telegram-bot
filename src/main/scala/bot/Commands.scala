@@ -16,7 +16,7 @@ object  Commands {
 
   case class CreatePoll(name : String, anonimity : Option[String], continuousVisibility : Option[String],
                         startTime : Option[String], stopTime : Option[String]) extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       val anonimityValue = anonimity.getOrElse("yes") == "yes"
       val continuousVisibilityValue = continuousVisibility.getOrElse("afterstop") == "continuous"
       val startTimeValue = parseTime(startTime)
@@ -30,14 +30,14 @@ object  Commands {
   }
 
   case class ListPolls() extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       if (_polls.isEmpty) "You have no polls"
       else "Current polls:\n" + _polls.map{case (k, v) => "  " + k + " : " + v.name}.mkString("\n")
     }
   }
 
   case class DeletePoll(id : Int) extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       _polls.get(id).map(_ => {
         _polls = _polls - id
         "Poll deleted successfully"
@@ -46,7 +46,7 @@ object  Commands {
   }
 
   case class StartPoll(id : Int) extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       _polls.get(id).map(_ => {
         val currentPoll = _polls(id)
         val newPoll = currentPoll.start()
@@ -61,7 +61,7 @@ object  Commands {
   }
 
   case class StopPoll(id : Int) extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       _polls.get(id).map(_ => {
         val currentPoll = _polls(id)
         val newPoll = currentPoll.stop()
@@ -76,7 +76,7 @@ object  Commands {
   }
 
   case class PollResult(id : Int) extends Command {
-    override def getReply: String = {
+    override def getReply(user: User): String = {
       _polls.get(id).map(_ => {
         _polls(id).getResult
       }).getOrElse("Poll does not exist")
@@ -84,6 +84,6 @@ object  Commands {
   }
 
   case class BadRequest() extends Command {
-    override def getReply: String = "Bad request"
+    override def getReply(user: User): String = "Bad request"
   }
 }
