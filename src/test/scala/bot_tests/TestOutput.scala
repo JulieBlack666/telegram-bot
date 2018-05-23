@@ -20,7 +20,7 @@ class TestOutput extends FlatSpec {
   }
 
   "Create poll" should "return id" in {
-    assert(CommandParser.apply("/create_poll (poll_name)").getReply(test_user) forall Character.isDigit)
+    assert(CommandParser.apply("/create_poll (poll_name)").getReply(test_user) == "Poll created. Poll id: 0")
   }
 
   "List polls" should "now be with poll" in {
@@ -110,12 +110,12 @@ class TestOutput extends FlatSpec {
   }
 
   it should "work correctly with choice question" in {
-    assert(AnswerQuestionChoiceMulti(1, List("0")).getReply(test_user) == "Your answer has been recorded")
+    assert(AnswerQuestionChoiceMulti(1, List("1")).getReply(test_user) == "Your answer has been recorded")
     assert(_polls(5).questions(1).variants.contains(Variant("1", 1)))
   }
 
   it should "work correctly with multi question" in {
-    assert(AnswerQuestionChoiceMulti(2, List("0", "1")).getReply(test_user) == "Your answer has been recorded")
+    assert(AnswerQuestionChoiceMulti(2, List("1", "2")).getReply(test_user) == "Your answer has been recorded")
     assert(_polls(5).questions(2).variants.contains(Variant("1", 1)))
     assert(_polls(5).questions(2).variants.contains(Variant("2", 1)))
   }
@@ -128,8 +128,8 @@ class TestOutput extends FlatSpec {
 
   it should "fail if one user votes twice" in {
     val newUser = User("name", 2)
-    AnswerQuestionChoiceMulti(1, List("0")).getReply(newUser)
-    assert(AnswerQuestionChoiceMulti(1, List("0")).getReply(newUser) == "You already answered")
+    AnswerQuestionChoiceMulti(1, List("1")).getReply(newUser)
+    assert(AnswerQuestionChoiceMulti(1, List("1")).getReply(newUser) == "You already answered")
   }
 
   "Delete question" should "work correctly" in {

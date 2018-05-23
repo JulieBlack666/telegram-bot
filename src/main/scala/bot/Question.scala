@@ -18,7 +18,7 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
   }
 
   def answerChoice(answer: String): Question ={
-    val index = answer.toInt
+    val index = answer.toInt - 1
     if (index >= variants.size)
       this
     else{
@@ -44,9 +44,9 @@ case class Question(name : String, q_type : QuestionType, variants : List[Varian
     else {
       val variants_str = noResult match {
         case true => variants.zipWithIndex
-          .map { case (x, i) => i.toString + ") " + x.variant }.mkString("\n")
+          .map { case (x, i) => (i+1).toString + ") " + x.variant }.mkString("\n")
         case false => variants.zipWithIndex
-        .map { case (x, i) => i.toString + ") " + x.toString }.mkString("\n")
+        .map { case (x, i) => (i+1).toString + ") " + x.toString }.mkString("\n")
       }
       val answered = if (!anonymity)
         "answered users: " + voters.map(x => x.name).mkString(", ")

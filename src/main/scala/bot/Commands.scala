@@ -7,8 +7,10 @@ import scala.collection.immutable
 object  Commands {
 
   var _polls: Map[Int, Poll] = immutable.Map[Int, Poll]()
-  var maxId = 0
+  val idIterator : Iterator[Int] = Stream.from(0).iterator
   private val dateFormat = new SimpleDateFormat("hh:mm:ss yy:MM:dd")
+
+  def getNextId: Int = idIterator.next()
 
   def parseTime(time : Option[String]) : Date = {
     dateFormat.parse(time.getOrElse(return null))
@@ -21,8 +23,7 @@ object  Commands {
       val continuousVisibilityValue = continuousVisibility.getOrElse("afterstop") == "continuous"
       val startTimeValue = parseTime(startTime)
       val stopTimeValue = parseTime(stopTime)
-      val id = maxId
-      maxId += 1
+      val id = getNextId
 
       _polls = _polls + (id -> Poll(name, id, anonimityValue, continuousVisibilityValue, startTimeValue, stopTimeValue))
       "Poll created. Poll id: " + id.toString
