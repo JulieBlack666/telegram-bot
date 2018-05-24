@@ -105,4 +105,15 @@ class TestParser extends FlatSpec {
   "Delete question" should "be parsed" in {
     assert(CommandParser.apply("/delete_question (0)") == DeleteQuestion(0))
   }
+
+  "Double parentheses" should "be parsed into single" in {
+    assert(CommandParser.apply("/create_poll (name with ((parentheses)) in the middle)")
+      == CreatePoll("name with (parentheses) in the middle", None, None, None, None))
+    assert(CommandParser.apply("/create_poll (name with ((parentheses in the end)))")
+      == CreatePoll("name with (parentheses in the end)", None, None, None, None))
+    assert(CommandParser.apply("/add_question (((parentheses)) here) (choice) \n (and((here)))")
+      == AddQuestion("(parentheses) here", "choice", List("and(here)")))
+    assert(CommandParser.apply("/answer (0) (parentheses ((in)) answer)")
+      == AnswerQuestionOpen(0, "parentheses (in) answer"))
+  }
 }
