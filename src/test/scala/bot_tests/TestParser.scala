@@ -36,7 +36,7 @@ class TestParser extends FlatSpec {
   it should "be parsed with start and end time" in {
     assert(CommandParser.apply("/create_poll (poll_name) (yes) (afterstop) (13:22:00 18:03:26) (15:22:00 18:03:26)") ==
       CreatePoll("poll_name", Option("yes"),
-      Option("afterstop"), Option("13:22:00 18:03:26"), Option("15:22:00 18:03:26")))
+        Option("afterstop"), Option("13:22:00 18:03:26"), Option("15:22:00 18:03:26")))
   }
 
   "Delete poll" should "be parsed" in {
@@ -86,7 +86,7 @@ class TestParser extends FlatSpec {
       AddQuestion("doctor who?", "multi", List("meow", "nobody")))
   }
 
-  "View" should "be parsed"in {
+  "View" should "be parsed" in {
     assert(CommandParser.apply("/view") == View())
   }
 
@@ -106,13 +106,17 @@ class TestParser extends FlatSpec {
     assert(CommandParser.apply("/delete_question (0)") == DeleteQuestion(0))
   }
 
-  "Double parentheses" should "be parsed into single" in {
+  "Double parentheses" should "be parsed into single create_poll" in {
     assert(CommandParser.apply("/create_poll (name with ((parentheses)) in the middle)")
       == CreatePoll("name with (parentheses) in the middle", None, None, None, None))
     assert(CommandParser.apply("/create_poll (name with ((parentheses in the end)))")
       == CreatePoll("name with (parentheses in the end)", None, None, None, None))
-    assert(CommandParser.apply("/add_question (((parentheses)) here) (choice) \n (and((here)))")
-      == AddQuestion("(parentheses) here", "choice", List("and(here)")))
+  }
+  it should "be parsed into single add_question" in {
+  assert(CommandParser.apply("/add_question (((parentheses)) here) (choice) \n (and((here)))")
+    == AddQuestion("(parentheses) here", "choice", List("and(here)")))
+  }
+  it should "be parsed into single answer" in {
     assert(CommandParser.apply("/answer (0) (parentheses ((in)) answer)")
       == AnswerQuestionOpen(0, "parentheses (in) answer"))
   }

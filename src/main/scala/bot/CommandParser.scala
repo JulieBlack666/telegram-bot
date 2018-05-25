@@ -10,21 +10,24 @@ class CommandParser extends RegexParsers {
   override protected val whiteSpace: Regex = """ +""".r
 
   def createPoll: Parser[Command] = {
-    val pollName = Parser("""[^()]+""".r)
+    val pollName = Parser("""([^()]|\)\)|\(\()+""".r)
     val anonimity = Parser("(" ~> ("yes" | "no") <~ ")")
     val continuous = Parser("(" ~> ("afterstop" | "continuous") <~ ")")
     val startTime = Parser("(" ~> """\d{2}:\d{2}:\d{2} \d{2}:\d{2}:\d{2}""".r <~ ")")
     val stopTime = startTime
     ("^/create_poll".r ~> "(" ~> pollName <~ ")") ~ anonimity.? ~ continuous.? ~ startTime.? ~ stopTime.? <~ "$".r ^^
-      {case name ~ anon ~ continuation ~ start ~ end => CreatePoll(name, anon, continuation, start, end)}
+      {case name ~ anon ~ continuation ~ start ~ end =>
+        CreatePoll(name.replace("((", "(").replace("))", ")"), anon, continuation, start, end)}
   }
 
   def addQuestion: Parser[Command] = {
-    val questionName = Parser("(" ~> """[^()]+""".r <~ ")")
+    val questionName = Parser("(" ~> """([^()]|\)\)|\(\()+""".r <~ ")")
     val questionType = Parser("(" ~> ("open" | "choice" | "multi") <~ ")")
-    val variant = Parser("\n" ~> ("(" ~> """[^()]+""".r  <~ ")"))
+    val variant = Parser("\n" ~> ("(" ~> """([^()]|\)\)|\(\()+""".r  <~ ")"))
     val command = Parser("^/add_question".r ~> questionName)
-    command ~ questionType ~ rep(variant) ^^ { case name ~ qType ~ variants => AddQuestion(name, qType, variants) }
+    command ~ questionType ~ rep(variant) ^^ { case name ~ qType ~ variants =>
+      AddQuestion(name.replace("((", "(").replace("))", ")"),
+        qType, variants.map(s => s.replace("((", "(").replace("))", ")"))) }
   }
 
   def listPolls: Parser[Command] = """^/list""".r ^^ { _ => ListPolls() }
@@ -45,7 +48,8 @@ class CommandParser extends RegexParsers {
 
   def delQuestion: Parser[Command] = "^/delete_question".r ~> "(" ~> """\d+""".r <~ ")" ^^ { x => DeleteQuestion(x.toInt) }
 
-  def answerQuestionOpen: Parser[Command] = "^/answer".r ~> ("(" ~> """\d+""".r <~ ")") ~ ("(" ~> """[^()]+""".r <~ ")") ^^ { x => AnswerQuestionOpen(x._1.toInt, x._2) }
+  def answerQuestionOpen: Parser[Command] = "^/answer".r ~> ("(" ~> """\d+""".r <~ ")") ~ ("(" ~> """([^()]|\)\)|\(\()+""".r <~ ")") ^^
+    { x => AnswerQuestionOpen(x._1.toInt, x._2.replace("((", "(").replace("))", ")")) }
 
   def answerQuestionChoiceMulti: Parser[Command] = "^/answer".r ~> ("(" ~> """\d+""".r <~ ")") ~
     ("(" ~> rep("""\d+""".r) <~ ")") ^^ { x => AnswerQuestionChoiceMulti(x._1.toInt, x._2) }
