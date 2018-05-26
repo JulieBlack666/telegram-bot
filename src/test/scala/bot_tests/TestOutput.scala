@@ -68,7 +68,7 @@ class TestOutput extends FlatSpec {
   }
 
   "Stop poll" should "work for usual started poll" in {
-    assert(CommandParser.apply("/stop_poll (3)").getReply(test_user) == "The poll is stopped successfully")
+    assert(StopPoll(3).getReply(test_user) == "The poll is stopped successfully")
   }
 
   it should "not stop non-active poll" in {
@@ -82,7 +82,7 @@ class TestOutput extends FlatSpec {
 
   "End" should "end the context" in {
     assert(EndContext().getReply(test_user) == "You stopped working with the poll test_poll")
-    assert(selectedPoll == null)
+    assert(selectedPoll.isEmpty)
   }
 
   "Add question" should "work for open question" in {

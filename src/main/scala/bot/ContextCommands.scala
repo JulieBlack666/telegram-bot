@@ -4,10 +4,9 @@ import bot.Commands._polls
 
 object ContextCommands {
 
-  var selectedPoll : Option[Int] = _
-
+  var selectedPoll : Option[Int] = None
   def WithSelectedPoll(body: => String): String = {
-    if (selectedPoll != null){
+    if (selectedPoll.isDefined){
       body
     } else
       "You should select poll first"
@@ -26,7 +25,7 @@ object ContextCommands {
     override def getReply(user: User): String = {
       WithSelectedPoll {
         val pollToEnd = _polls(selectedPoll.get)
-        selectedPoll = null
+        selectedPoll = None
         "You stopped working with the poll " + pollToEnd.name
       }
     }

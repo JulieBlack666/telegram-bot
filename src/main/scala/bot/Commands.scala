@@ -8,12 +8,12 @@ object  Commands {
 
   var _polls: Map[Int, Poll] = immutable.Map[Int, Poll]()
   val idIterator : Iterator[Int] = Stream.from(0).iterator
-  private val dateFormat = new SimpleDateFormat("hh:mm:ss yy:MM:dd")
+  private val dateFormat = new SimpleDateFormat("HH:mm:ss yy:MM:dd")
 
   def getNextId: Int = idIterator.next()
 
-  def parseTime(time : Option[String]) : Date = {
-    dateFormat.parse(time.getOrElse(return null))
+  def parseTime(time : Option[String]) : Option[Date] = {
+    Some(dateFormat.parse(time.getOrElse(return None)))
   }
 
   case class CreatePoll(name : String, anonimity : Option[String], continuousVisibility : Option[String],

@@ -10,11 +10,11 @@ import bot.User
 
 
 object TelegramIntegration extends TelegramBot with Polling with Commands {
-  def token = "566082176:AAGXU23TOXCuvqrCSuD_IYYhfx2SYbw70xg"
+  lazy val token = "566082176:AAGXU23TOXCuvqrCSuD_IYYhfx2SYbw70xg"
 
   override def receiveMessage(msg: Message): Unit = {
     for (text <- msg.text) {
-      request(SendMessage(msg.source, handleCommand(text, new User(msg.from.get.firstName, msg.chat.id))))
+      request(SendMessage(msg.source, handleCommand(text, User(msg.from.get.firstName, msg.chat.id))))
     }
   }
 
